@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Getting started with cvpa</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Getting started with cvpa</h1>
+
+
+
+<!--
+  cvpa.Rmd is GENERATED from cvpa.Rmd.orig -- edit the .orig, not cvpa.Rmd.
+  The output below was computed against the live data, so the vignette builds
+  offline (CRAN, pkgdown). Re-knit before each release and whenever the data
+  changes, from the package root:
+    devtools::load_all(); setwd("vignettes")
+    knitr::knit("cvpa.Rmd.orig", "cvpa.Rmd")
+-->
+<p>cvpa gives you weighted party support and policy-issue attitudes by
+demographic group, over time, from Canadian public-opinion surveys going
+back to 1945. As of version 0.2.0, that covers several hundred policy
+questions across seven issue domains – economy and taxation, energy and
+environment, health/education/social programs, immigration/diversity/
+federalism, foreign policy and identity, social issues/rights/justice,
+and democracy and institutions – in addition to vote choice and
+intention. From cvpa’s point of view, vote is just one more question:
+it’s decoded and analyzed the same way as any policy question.</p>
+<div id="two-ways-to-use-cvpa" class="section level2">
+<h2>Two ways to use cvpa</h2>
+<p>There are two separate paths through the package, and it’s worth
+being clear about which one you’re on:</p>
+<ul>
+<li><strong>The live data path</strong>
+(<code>update_cvpa_data()</code>, <code>question_catalog()</code>,
+<code>question_data()</code>, <code>wtd_response()</code>,
+<code>response_gap_analysis()</code>) reads Parquet files hosted
+alongside the <a href="https://policyattitudes.ca/app/">policy-attitudes
+web app</a>, covering every question in the catalog. This is almost
+certainly what you want for new analysis.</li>
+<li><strong>The legacy vote path</strong> (<code>vote_data</code>,
+<code>wtd_vote()</code>, <code>gap_analysis()</code>) is the original
+vote-choice/intention dataset and functions the package shipped with
+before 0.2.0, kept as-is for reproducing prior work (in particular <a href="https://doi.org/10.1017/S0008423925000241">Lucas, Romualdi,
+Armstrong, and Goodyear-Grant (2025)</a> on the Canadian Vote Intention
+Dataset, <em>Canadian Journal of Political Science</em> 58 (3): 666-80).
+<code>wtd_vote()</code>/<code>gap_analysis()</code> are, under the hood,
+thin wrappers around the same general engine that powers the live data
+path, so their behavior hasn’t changed – see the last section of this
+vignette.</li>
+</ul>
+<p>This vignette focuses on the live data path, since that’s what’s
+new.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(cvpa)</span></code></pre></div>
+</div>
+<div id="setting-up-the-local-cache" class="section level2">
+<h2>Setting up the local cache</h2>
+<p>cvpa doesn’t bundle policy-attitude data in the package itself –
+there’s too much of it, and it’s updated periodically as new survey
+waves are added. Instead, <code>update_cvpa_data()</code> downloads what
+you ask for into a local cache (see <code>cvpa_cache_dir()</code>) the
+first time you need it, and every other function reads only from that
+cache. Nothing in the package other than <code>update_cvpa_data()</code>
+ever touches the network, so you’re always in control of when a download
+happens.</p>
+<p>The question catalog and the demographic/party code-labels table are
+small and are always refreshed by <code>update_cvpa_data()</code>.
+Respondent-level data for a specific question is only fetched when you
+name it (there are several hundred questions, so there’s deliberately no
+“fetch everything” option – the full dataset is available as
+<code>dataset.parquet</code> from the <a href="https://github.com/lucasjacklucas/cvpa_dataset">cvpa_dataset
+repository</a>):</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">update_cvpa_data</span>(<span class="at">questions =</span> <span class="st">&quot;bri_econ_013&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#&gt; Fetching question catalog (vbl_data.parquet)...</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt; Fetching code labels (code_labels.parquet)...</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt; Fetching 1 question file(s)...</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt;   [1/1] bri_econ_013</span></span></code></pre></div>
+</div>
+<div id="finding-a-question" class="section level2">
+<h2>Finding a question</h2>
+<p><code>question_catalog()</code> lists every available question, one
+row per question, deduplicated across the several hundred survey waves
+each question has accumulated over the decades:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">question_catalog</span>(<span class="at">domain =</span> <span class="st">&quot;econ&quot;</span>), <span class="dv">10</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt;        question domain         domain_label                       issue_label</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt; 1  env_econ_061   econ Economy and Taxation    Agree free trade Can-US-Mexico</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; 2  env_econ_074   econ Economy and Taxation        Appr cutting federal taxes</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; 3  env_econ_056   econ Economy and Taxation  Appr fed govt: deficit reduction</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; 4  env_econ_057   econ Economy and Taxation           Appr fed govt: taxation</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; 5  env_econ_060   econ Economy and Taxation       Appr prov govt: agriculture</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; 6  env_econ_075   econ Economy and Taxation Appr prov govt: deficit reduction</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; 7  env_econ_049   econ Economy and Taxation  Appr prov govt: econ development</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; 8  env_econ_046   econ Economy and Taxation     Appr prov govt: privatization</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; 9  env_econ_073   econ Economy and Taxation          Appr prov govt: taxation</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; 10 env_econ_058   econ Economy and Taxation                       Approve GST</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt;                                                                                                                                                       question_wording</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; 1                                                                        Do you agree or disagree that there should be free trade between Canada, the U.S. and Mexico?</span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; 2                                                                                             Do you approve or disapprove of the federal government making a tax cut?</span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt; 3                                                                Do you approve or disapprove of the way the current federal government is handling deficit reduction?</span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; 4                                                     Generally speaking, do you approve or disapprove of the way the current federal government is handling taxation?</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt; 5                                                              Do you approve or disapprove of the way your provincial government is handling agriculture and farming?</span></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt; 6                                        Generally speaking, do you approve or disapprove of the way your current provincial government is handling deficit reduction?</span></span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co">#&gt; 7                                     Generally speaking, do you approve or disapprove of the way your current provincial government is handling economic development?</span></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt; 8                                                                Do you approve or disapprove of the way your current provincial government is handling privatization?</span></span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co">#&gt; 9                                                 Generally speaking, do you approve or disapprove of the way your current provincial government is handling taxation?</span></span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#&gt; 10 As you may know, the federal government has a tax on most goods and services, known as the Goods and Services Tax or GST. Do you approve or disapprove of this tax?</span></span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co">#&gt;    n_waves type        value_labels</span></span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co">#&gt; 1        9    b     Disagree, Agree</span></span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a><span class="co">#&gt; 2        9    b Disapprove, Approve</span></span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="co">#&gt; 3       10    b Disapprove, Approve</span></span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="co">#&gt; 4       10    b Disapprove, Approve</span></span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="co">#&gt; 5       25    b Disapprove, Approve</span></span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="co">#&gt; 6        1    b Disapprove, Approve</span></span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="co">#&gt; 7       17    b Disapprove, Approve</span></span>
+<span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a><span class="co">#&gt; 8        5    b Disapprove, Approve</span></span>
+<span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a><span class="co">#&gt; 9       35    b Disapprove, Approve</span></span>
+<span id="cb3-34"><a href="#cb3-34" tabindex="-1"></a><span class="co">#&gt; 10       9    b Disapprove, Approve</span></span></code></pre></div>
+<p><code>domain</code> and <code>type</code> (<code>&quot;b&quot;</code> for
+binary questions, <code>&quot;lsm&quot;</code> for 3-point less/same/more-style
+questions, <code>&quot;nsa&quot;</code> for 3-point never/sometimes/always- style
+questions, or <code>&quot;party&quot;</code> for vote choice/intention) both
+filter the catalog if you want to narrow it down. With no arguments,
+<code>question_catalog()</code> returns everything, vote included:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">nrow</span>(<span class="fu">question_catalog</span>())</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co">#&gt; [1] 630</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">question_catalog</span>()<span class="sc">$</span>domain)</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt; dpin econ ener hwps idim intd soim vote </span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt;   34  139   57   85  118   72  123    2</span></span></code></pre></div>
+<p>Once you’ve picked a question,
+<code>question_response_labels()</code> shows you what its response
+categories actually are and how they’re coded:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">question_response_labels</span>(<span class="st">&quot;bri_econ_013&quot;</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="co">#&gt;   code label sort_order</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt; 1   -1  Less          1</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt; 2    0  Same          2</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt; 3    1  More          3</span></span></code></pre></div>
+</div>
+<div id="fetching-and-inspecting-a-questions-data" class="section level2">
+<h2>Fetching and inspecting a question’s data</h2>
+<p><code>question_data()</code> reads the (now cached) respondent-level
+data for one question and, by default, decodes both the response and
+every demographic column into labeled factors:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">question_data</span>(<span class="st">&quot;bri_econ_013&quot;</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">head</span>(d)</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#&gt; # A data frame: 6 × 18</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co">#&gt;   response_id  survey_id response weight  year vote_intention vote_choice region</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co">#&gt; * &lt;chr&gt;        &lt;chr&gt;     &lt;fct&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;          &lt;fct&gt;       &lt;fct&gt; </span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co">#&gt; 1 CES2015_Com… 2015.dta  More      0.835  2015 Undecided      PC/Conserv… Ontar…</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co">#&gt; 2 2019+Canadi… 2019.dta  Less      1.35   2019 PC/Conservati… &lt;NA&gt;        Prair…</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co">#&gt; 3 2021 Canadi… 2021.dta  More      0.546  2021 Liberal        Bloc Quebe… Quebec</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#&gt; 4 ces2004-6-8… 2008.dta  Same      1.31   2008 &lt;NA&gt;           Green       Prair…</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co">#&gt; 5 2021 Canadi… 2021.dta  Same      0.631  2021 PC/Conservati… PC/Conserv… Prair…</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co">#&gt; 6 2021 Canadi… 2021.dta  Less      1.94   2021 PC/Conservati… PC/Conserv… Prair…</span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#&gt; # ℹ 10 more variables: province &lt;fct&gt;, com_500 &lt;fct&gt;, com_100 &lt;fct&gt;,</span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt; #   gender &lt;fct&gt;, age_cats &lt;fct&gt;, religion &lt;fct&gt;, degree &lt;fct&gt;, language &lt;fct&gt;,</span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt; #   union_household &lt;fct&gt;, occupation &lt;fct&gt;</span></span></code></pre></div>
+<p>Every question’s data has the same shape: <code>response</code>,
+<code>weight</code>, <code>year</code>, plus the demographic and vote
+columns listed in <code>cvpa_grouping_vars</code> – see
+<code>demographic_vars</code> for what each demographic variable
+measures and what categories it takes:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>cvpa_grouping_vars</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;vote_intention&quot;  &quot;vote_choice&quot;     &quot;region&quot;          &quot;province&quot;       </span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt;  [5] &quot;com_500&quot;         &quot;com_100&quot;         &quot;gender&quot;          &quot;age_cats&quot;       </span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt;  [9] &quot;religion&quot;        &quot;degree&quot;          &quot;language&quot;        &quot;union_household&quot;</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt; [13] &quot;occupation&quot;</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>demographic_vars</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt;           variable</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="co">#&gt; 1           region</span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="co">#&gt; 2         province</span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co">#&gt; 3          com_500</span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="co">#&gt; 4          com_100</span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="co">#&gt; 5           gender</span></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="co">#&gt; 6         age_cats</span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a><span class="co">#&gt; 7         religion</span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a><span class="co">#&gt; 8           degree</span></span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a><span class="co">#&gt; 9         language</span></span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a><span class="co">#&gt; 10 union_household</span></span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a><span class="co">#&gt; 11      occupation</span></span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a><span class="co">#&gt;                                                                                                                                                                                                                                              description</span></span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a><span class="co">#&gt; 1                                                                                                                                                                                                                                    Region of residence</span></span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a><span class="co">#&gt; 2                                                                                                                                                                                                                     Province or territory of residence</span></span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a><span class="co">#&gt; 3                                                                                                                                                                                                            Community size, split at 500,000 population</span></span>
+<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a><span class="co">#&gt; 4                                                                                                                                                                                                            Community size, split at 100,000 population</span></span>
+<span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a><span class="co">#&gt; 5  Respondent gender. Binary Man/Woman only -- a non-binary/other response option exists in some surveys from 2019 onward but is too sparse to include here; see the Canadian Opinion Research Archive (https://www.queensu.ca/cora/) for the full data.</span></span>
+<span id="cb7-25"><a href="#cb7-25" tabindex="-1"></a><span class="co">#&gt; 6                                                                                                                                                                                                                                           Age category</span></span>
+<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a><span class="co">#&gt; 7                                                                                                                                                                                                                                  Religious affiliation</span></span>
+<span id="cb7-27"><a href="#cb7-27" tabindex="-1"></a><span class="co">#&gt; 8                                                                                                                                                                                                                           University degree attainment</span></span>
+<span id="cb7-28"><a href="#cb7-28" tabindex="-1"></a><span class="co">#&gt; 9                                                                                                                                                                                                                                        Language spoken</span></span>
+<span id="cb7-29"><a href="#cb7-29" tabindex="-1"></a><span class="co">#&gt; 10                                                                                                                                                                                                                     Union membership in the household</span></span>
+<span id="cb7-30"><a href="#cb7-30" tabindex="-1"></a><span class="co">#&gt; 11                                                                                                                                                                                                                               Respondent&#39;s occupation</span></span>
+<span id="cb7-31"><a href="#cb7-31" tabindex="-1"></a><span class="co">#&gt;                                                                                                                                   categories</span></span>
+<span id="cb7-32"><a href="#cb7-32" tabindex="-1"></a><span class="co">#&gt; 1                                                                               Atlantic; Quebec; Ontario; Prairies; British Columbia; North</span></span>
+<span id="cb7-33"><a href="#cb7-33" tabindex="-1"></a><span class="co">#&gt; 2                                                                                        NL; PEI; NS; NB; QC; ON; MB; SK; AB; BC; YT; NT; NU</span></span>
+<span id="cb7-34"><a href="#cb7-34" tabindex="-1"></a><span class="co">#&gt; 3                                                                                                      Population &lt;= 500k; Population &gt; 500k</span></span>
+<span id="cb7-35"><a href="#cb7-35" tabindex="-1"></a><span class="co">#&gt; 4                                                                                                      Population &lt;= 100k; Population &gt; 100k</span></span>
+<span id="cb7-36"><a href="#cb7-36" tabindex="-1"></a><span class="co">#&gt; 5                                                                                                                                 Man; Woman</span></span>
+<span id="cb7-37"><a href="#cb7-37" tabindex="-1"></a><span class="co">#&gt; 6                                                                                                                          18-29; 30-49; 50+</span></span>
+<span id="cb7-38"><a href="#cb7-38" tabindex="-1"></a><span class="co">#&gt; 7                                                                                                  Catholic; Protestant; Jewish; Other; None</span></span>
+<span id="cb7-39"><a href="#cb7-39" tabindex="-1"></a><span class="co">#&gt; 8                                                                                                    No University Degree; University Degree</span></span>
+<span id="cb7-40"><a href="#cb7-40" tabindex="-1"></a><span class="co">#&gt; 9                                                                                                 French; English; French and English; Other</span></span>
+<span id="cb7-41"><a href="#cb7-41" tabindex="-1"></a><span class="co">#&gt; 10                                                                                   No Union Member in Household; Union Member in Household</span></span>
+<span id="cb7-42"><a href="#cb7-42" tabindex="-1"></a><span class="co">#&gt; 11 Managers, Executives; Professional; Routine Non-manual; Working Class; Armed Forces; Farmer/Fiserman; Retired; Unemployed; Student; Other</span></span></code></pre></div>
+<p>Notice that <code>vote_intention</code> and <code>vote_choice</code>
+are in that list alongside the demographics – every question’s data
+carries how each respondent voted, so you can group any policy question
+by vote just as easily as by gender or region.</p>
+</div>
+<div id="weighted-response-shares-over-time" class="section level2">
+<h2>Weighted response shares over time</h2>
+<p><code>wtd_response()</code> computes each response category’s
+weighted share of the total, for every year (and, optionally,
+grouping-variable combination):</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">wtd_response</span>(d, <span class="at">grouping_vars =</span> <span class="st">&quot;gender&quot;</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#&gt; # A tibble: 54 × 5</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co">#&gt;     year response gender  count response_share</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co">#&gt;    &lt;dbl&gt; &lt;fct&gt;    &lt;fct&gt;   &lt;dbl&gt;          &lt;dbl&gt;</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co">#&gt;  1  2000 Less     Man     118.          0.0715</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#&gt;  2  2000 Less     Woman    63.5         0.0374</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt;  3  2000 Same     Man     315.          0.191 </span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co">#&gt;  4  2000 Same     Woman   222.          0.131 </span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co">#&gt;  5  2000 More     Man    1218.          0.738 </span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="co">#&gt;  6  2000 More     Woman  1411.          0.832 </span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="co">#&gt;  7  2004 Less     Man     134.          0.0675</span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="co">#&gt;  8  2004 Less     Woman    63.5         0.0309</span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="co">#&gt;  9  2004 Same     Man     372.          0.187 </span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="co">#&gt; 10  2004 Same     Woman   276.          0.134 </span></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="co">#&gt; # ℹ 44 more rows</span></span></code></pre></div>
+<p>A quick look at how the “More” category (support for reducing the
+rich-poor gap) has moved over time, by gender:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>more_by_year <span class="ot">&lt;-</span> <span class="fu">subset</span>(<span class="fu">wtd_response</span>(d, <span class="at">grouping_vars =</span> <span class="st">&quot;gender&quot;</span>), response <span class="sc">==</span> <span class="st">&quot;More&quot;</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="fu">ggplot</span>(more_by_year, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> response_share, <span class="at">color =</span> gender)) <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="at">Man =</span> <span class="st">&quot;steelblue&quot;</span>, <span class="at">Woman =</span> <span class="st">&quot;firebrick&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;Year&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Share answering </span><span class="sc">\&quot;</span><span class="st">More</span><span class="sc">\&quot;</span><span class="st">&quot;</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">&quot;Support for reducing the rich-poor gap, by gender&quot;</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>    <span class="at">color =</span> <span class="cn">NULL</span></span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<div class="float">
+<img role="img" aria-label="plot of chunk plot-wtd-response" src="data:image/png;base64,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" alt="plot of chunk plot-wtd-response" />
+<div class="figcaption">plot of chunk plot-wtd-response</div>
+</div>
+</div>
+<div id="testing-whether-a-gap-is-significant" class="section level2">
+<h2>Testing whether a gap is significant</h2>
+<p><code>response_gap_analysis()</code> generalizes
+<code>gap_analysis()</code> to any question: a difference-of-proportions
+test between two levels of a grouping variable, for each response
+category, for each year:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">response_gap_analysis</span>(d, <span class="at">grouping_var =</span> <span class="st">&quot;gender&quot;</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="co">#&gt; # A tibble: 27 × 13</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co">#&gt; # Groups:   year [9]</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co">#&gt;     year response cnt_Man cnt_Woman n_Man n_Woman flag       estimate1 estimate2</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co">#&gt;    &lt;dbl&gt; &lt;fct&gt;      &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co">#&gt;  1  2000 Less       118.       63.5 1651.   1697. p-val rel…    0.0715    0.0374</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co">#&gt;  2  2000 Same       315.      222.  1651.   1697. p-val rel…    0.191     0.131 </span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co">#&gt;  3  2000 More      1218.     1411.  1651.   1697. p-val rel…    0.738     0.832 </span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co">#&gt;  4  2004 Less       134.       63.5 1991.   2054. p-val rel…    0.0675    0.0309</span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co">#&gt;  5  2004 Same       372.      276.  1991.   2054. p-val rel…    0.187     0.134 </span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co">#&gt;  6  2004 More      1485.     1714.  1991.   2054. p-val rel…    0.745     0.835 </span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#&gt;  7  2006 Less        62.5      19.6  956.    914. p-val rel…    0.0653    0.0215</span></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co">#&gt;  8  2006 Same       177.      107.   956.    914. p-val rel…    0.185     0.117 </span></span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co">#&gt;  9  2006 More       716.      788.   956.    914. p-val rel…    0.749     0.862 </span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co">#&gt; 10  2008 Less        94.0      61.8 1609.   1665. p-val rel…    0.0584    0.0371</span></span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co">#&gt; # ℹ 17 more rows</span></span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co">#&gt; # ℹ 4 more variables: p.value &lt;dbl&gt;, conf.low &lt;dbl&gt;, conf.high &lt;dbl&gt;,</span></span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="co">#&gt; #   diff &lt;dbl&gt;</span></span></code></pre></div>
+<p>The <code>flag</code> column tells you whether every cell going into
+that year’s test had an expected count above 5
+(<code>&quot;p-val reliable&quot;</code>) or not (<code>&quot;p-val unreliable&quot;</code>)
+– see <code>make_flag()</code>.</p>
+</div>
+<div id="vote-is-just-another-question" class="section level2">
+<h2>Vote is just another question</h2>
+<p>Because vote choice and intention live in the same catalog and the
+same <code>resp/question=&lt;code&gt;/data_0.parquet</code> layout as
+every policy question, everything above works identically for
+<code>&quot;vote_choice&quot;</code>/<code>&quot;vote_intention&quot;</code>:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">update_cvpa_data</span>(<span class="at">questions =</span> <span class="st">&quot;vote_choice&quot;</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="co">#&gt; Fetching question catalog (vbl_data.parquet)...</span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="co">#&gt; Fetching code labels (code_labels.parquet)...</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="co">#&gt; Fetching 1 question file(s)...</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="co">#&gt;   [1/1] vote_choice</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>vc <span class="ot">&lt;-</span> <span class="fu">question_data</span>(<span class="st">&quot;vote_choice&quot;</span>, <span class="at">years =</span> <span class="dv">2000</span><span class="sc">:</span><span class="dv">2021</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="fu">wtd_response</span>(vc, <span class="at">grouping_vars =</span> <span class="st">&quot;gender&quot;</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a><span class="co">#&gt; # A tibble: 120 × 5</span></span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a><span class="co">#&gt;     year response        gender count response_share</span></span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a><span class="co">#&gt;    &lt;dbl&gt; &lt;fct&gt;           &lt;fct&gt;  &lt;dbl&gt;          &lt;dbl&gt;</span></span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a><span class="co">#&gt;  1  2000 Liberal         Man    1218.         0.415 </span></span>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a><span class="co">#&gt;  2  2000 Liberal         Woman  1365.         0.456 </span></span>
+<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a><span class="co">#&gt;  3  2000 PC/Conservative Man     408.         0.139 </span></span>
+<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a><span class="co">#&gt;  4  2000 PC/Conservative Woman   414.         0.138 </span></span>
+<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a><span class="co">#&gt;  5  2000 CCF/NDP         Man     265.         0.0904</span></span>
+<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a><span class="co">#&gt;  6  2000 CCF/NDP         Woman   339.         0.113 </span></span>
+<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a><span class="co">#&gt;  7  2000 Bloc Quebecois  Man     304.         0.104 </span></span>
+<span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a><span class="co">#&gt;  8  2000 Bloc Quebecois  Woman   298.         0.0997</span></span>
+<span id="cb11-19"><a href="#cb11-19" tabindex="-1"></a><span class="co">#&gt;  9  2000 Reform/Alliance Man     670.         0.228 </span></span>
+<span id="cb11-20"><a href="#cb11-20" tabindex="-1"></a><span class="co">#&gt; 10  2000 Reform/Alliance Woman   520.         0.174 </span></span>
+<span id="cb11-21"><a href="#cb11-21" tabindex="-1"></a><span class="co">#&gt; # ℹ 110 more rows</span></span></code></pre></div>
+</div>
+<div id="the-legacy-vote-path" class="section level2">
+<h2>The legacy vote path</h2>
+<p>If you’re working with the original <code>vote_data</code> dataset –
+for instance to reproduce results from the paper it was built for (<a href="https://doi.org/10.1017/S0008423925000241">Lucas, Romualdi,
+Armstrong, and Goodyear-Grant (2025)</a>) – <code>wtd_vote()</code> and
+<code>gap_analysis()</code> are unchanged:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">data</span>(vote_data)</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="fu">wtd_vote</span>(vote_data, <span class="st">&quot;intention&quot;</span>, <span class="at">years =</span> <span class="dv">2000</span><span class="sc">:</span><span class="dv">2022</span>, <span class="at">grouping_vars =</span> <span class="st">&quot;gender&quot;</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="co">#&gt; The following years are not available: 2012, 2013, 2014, 2016, 2017, 2018</span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="co">#&gt; # A tibble: 200 × 5</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="co">#&gt;     year vote           gender  count party_support</span></span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="co">#&gt;    &lt;dbl&gt; &lt;fct&gt;          &lt;fct&gt;   &lt;dbl&gt;         &lt;dbl&gt;</span></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="co">#&gt;  1  2000 Liberal        Man    5357.        0.451  </span></span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a><span class="co">#&gt;  2  2000 Liberal        Woman  5318.        0.483  </span></span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a><span class="co">#&gt;  3  2000 Conservative   Man    1263.        0.106  </span></span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a><span class="co">#&gt;  4  2000 Conservative   Woman  1247.        0.113  </span></span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a><span class="co">#&gt;  5  2000 NDP            Man    1045.        0.0880 </span></span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a><span class="co">#&gt;  6  2000 NDP            Woman  1146.        0.104  </span></span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a><span class="co">#&gt;  7  2000 Social Credit  Man      80.9       0.00681</span></span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="co">#&gt;  8  2000 Social Credit  Woman    59.4       0.00539</span></span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a><span class="co">#&gt;  9  2000 Bloc Quebecois Man    1041.        0.0876 </span></span>
+<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a><span class="co">#&gt; 10  2000 Bloc Quebecois Woman   942.        0.0855 </span></span>
+<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a><span class="co">#&gt; # ℹ 190 more rows</span></span>
+<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a><span class="fu">gap_analysis</span>(vote_data, <span class="st">&quot;intention&quot;</span>, <span class="at">years =</span> <span class="dv">2000</span><span class="sc">:</span><span class="dv">2022</span>, <span class="at">grouping_var =</span> <span class="st">&quot;gender&quot;</span>)</span>
+<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a><span class="co">#&gt; The following years are not available: 2012, 2013, 2014, 2016, 2017, 2018</span></span>
+<span id="cb12-20"><a href="#cb12-20" tabindex="-1"></a><span class="co">#&gt; # A tibble: 93 × 13</span></span>
+<span id="cb12-21"><a href="#cb12-21" tabindex="-1"></a><span class="co">#&gt; # Groups:   year [16]</span></span>
+<span id="cb12-22"><a href="#cb12-22" tabindex="-1"></a><span class="co">#&gt;     year vote         cnt_Man cnt_Woman  n_Man n_Woman flag  estimate1 estimate2</span></span>
+<span id="cb12-23"><a href="#cb12-23" tabindex="-1"></a><span class="co">#&gt;    &lt;dbl&gt; &lt;fct&gt;          &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;</span></span>
+<span id="cb12-24"><a href="#cb12-24" tabindex="-1"></a><span class="co">#&gt;  1  2000 Liberal       5357.     5318.  11883.  11012. p-va…   0.451     0.483  </span></span>
+<span id="cb12-25"><a href="#cb12-25" tabindex="-1"></a><span class="co">#&gt;  2  2000 Conservative  1263.     1247.  11883.  11012. p-va…   0.106     0.113  </span></span>
+<span id="cb12-26"><a href="#cb12-26" tabindex="-1"></a><span class="co">#&gt;  3  2000 NDP           1045.     1146.  11883.  11012. p-va…   0.0880    0.104  </span></span>
+<span id="cb12-27"><a href="#cb12-27" tabindex="-1"></a><span class="co">#&gt;  4  2000 Social Cred…    80.9      59.4 11883.  11012. p-va…   0.00681   0.00539</span></span>
+<span id="cb12-28"><a href="#cb12-28" tabindex="-1"></a><span class="co">#&gt;  5  2000 Bloc Quebec…  1041.      942.  11883.  11012. p-va…   0.0876    0.0855 </span></span>
+<span id="cb12-29"><a href="#cb12-29" tabindex="-1"></a><span class="co">#&gt;  6  2000 Reform/Alli…  2742.     2008.  11883.  11012. p-va…   0.231     0.182  </span></span>
+<span id="cb12-30"><a href="#cb12-30" tabindex="-1"></a><span class="co">#&gt;  7  2000 Other          353.      292.  11883.  11012. p-va…   0.0297    0.0265 </span></span>
+<span id="cb12-31"><a href="#cb12-31" tabindex="-1"></a><span class="co">#&gt;  8  2001 Liberal       1426.     1598.   3315.   3361. p-va…   0.430     0.476  </span></span>
+<span id="cb12-32"><a href="#cb12-32" tabindex="-1"></a><span class="co">#&gt;  9  2001 Conservative   581.      525.   3315.   3361. p-va…   0.175     0.156  </span></span>
+<span id="cb12-33"><a href="#cb12-33" tabindex="-1"></a><span class="co">#&gt; 10  2001 NDP            332.      377.   3315.   3361. p-va…   0.100     0.112  </span></span>
+<span id="cb12-34"><a href="#cb12-34" tabindex="-1"></a><span class="co">#&gt; # ℹ 83 more rows</span></span>
+<span id="cb12-35"><a href="#cb12-35" tabindex="-1"></a><span class="co">#&gt; # ℹ 4 more variables: p.value &lt;dbl&gt;, conf.low &lt;dbl&gt;, conf.high &lt;dbl&gt;,</span></span>
+<span id="cb12-36"><a href="#cb12-36" tabindex="-1"></a><span class="co">#&gt; #   diff &lt;dbl&gt;</span></span></code></pre></div>
+<p>Note that <code>vote_data</code> predates the cp3 Parquet pipeline
+and has a single <code>community_size</code> column rather than the live
+data path’s <code>com_100</code>/<code>com_500</code> split – see
+<code>demographic_vars</code> for the live path’s version of each
+demographic variable.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
